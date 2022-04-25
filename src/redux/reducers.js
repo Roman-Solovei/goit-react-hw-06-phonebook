@@ -13,7 +13,7 @@ const persistConfig = {
 
 
 const filterReducer = createReducer('', {
-    [contactFilter]: (action) => action.payload,
+    [contactFilter]: (state, action) => action.payload,
 });
 
 
