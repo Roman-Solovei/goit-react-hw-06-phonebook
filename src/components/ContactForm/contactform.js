@@ -1,9 +1,15 @@
+import React from 'react';
 import { useState } from "react";
-import PropTypes from "prop-types";
+import { useSelector, useDispatch } from 'react-redux';
+import { nanoid } from 'nanoid';
+import { addContact } from '../../redux/actions';
 import s from "./contactform.module.css"
 
 
-export default function ContactForm ({ addContact, contactList}) {
+export default function ContactForm() {
+  
+  const dispatch = useDispatch();
+  const contacts = useSelector((state) => state.contacts.items);
 
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
@@ -12,7 +18,7 @@ export default function ContactForm ({ addContact, contactList}) {
     // console.log(event.target)
     const { name, value } = event.target;
 
-    switch (name) { 
+    switch (name) {
 
       case "name": setName(value);
         break;
@@ -25,26 +31,27 @@ export default function ContactForm ({ addContact, contactList}) {
     }
   };
 
-     
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const contactName = contactList.map(contact => contact.name)
- 
-    if(contactName.includes(event.target.name.value)){
-      alert(`${event.target.name.value} is alredy in contacts`)
-      return
-    }
-    
-    addContact(name, number);      
-    reset();
-    };
-
   const reset = () => {     
     setName("");
     setNumber("");   
   };
+  
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // const contactName = contactList.map(contact => contact.name)
+ 
+    if(findContact){
+      alert(`${event.target.name.value} is alredy in contacts`)
+      return
+    }    
+    dispatch(addContact({ id: nanoid(), name, number }));      
+    reset();
+    };
+
     
+  const findContact = contacts.find(contact => contact.name === name);
+
     return (
       <form onSubmit={handleSubmit} className={s.form}>
         <label className={s.label}>
@@ -73,14 +80,10 @@ export default function ContactForm ({ addContact, contactList}) {
         </label>
         <button type="submit" className={s.formButton}>Add contact</button>
       </form>
-    );
-  
+    );  
 };
 
-ContactForm.propTypes = {
-  addContact: PropTypes.func.isRequired,
-  contactList: PropTypes.array.isRequired,
-};
+
 
 // export default class ContactForm extends Component {
 

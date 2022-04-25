@@ -1,22 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ThemeProvider } from 'styled-components';
+import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
-import { store } from './redux/store';
 import App from './App';
+import { store, persistor } from './redux/store';
 
-// import { App } from './App';
 
-const theme = {};
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>     
-      <ThemeProvider theme={theme}>
-         <App />
-      </ThemeProvider>      
-    </Provider>
-  </React.StrictMode>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <App />
+        </PersistGate>
+      </Provider>
+  </React.StrictMode>,
+  document.getElementById('root'),
 );
 
 
